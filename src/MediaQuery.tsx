@@ -16,51 +16,21 @@ interface MediaQueryProps {
 
 
 export function MediaQuery(props: MediaQueryProps) {
-  const { orientation, minResolution, maxResolution, minWidth, maxWidth, minHeight, maxHeight } = props;
-    const query = React.useMemo(()=>{
+
+  const camelTo = (key: string) => {
+        return key.replace( /([A-Z])/g, "-$1").toLowerCase();
+    }
+
+  const getQuery=(key: string, props)=>{
+        const queryValue = typeof props[key] === "number" ? `${props[key]}px` : props[key]
+        return `(${camelTo(key)}:${queryValue})`
+  }
+  const query = React.useMemo(()=>{
     return Object.entries(props).map(([key]) =>{
-        let res
-        switch(key){
-            case 'orientation': res=`(orientation: ${orientation})`;
-                break;
-            case 'min-width':{
-                const queryValue: TDimensionValue | undefined = typeof minWidth === "number" ? `${minWidth}px` : minWidth
-                res=`(min-width: ${queryValue})`;
-                } 
-                break;
-            case 'maxWidth':{
-                const queryValue: TDimensionValue | undefined = typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth
-                res=`(max-width: ${queryValue})`;
-                } 
-                break;
-
-            case 'minHeight':{
-                const queryValue: TDimensionValue|undefined = typeof minHeight === "number" ? `${minHeight}px` : minHeight
-                res=`(min-height: ${queryValue})`;
-                } 
-                break;
-
-            case 'maxHeight':{
-                const queryValue: TDimensionValue|undefined = typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight
-                res=`(max-height: ${queryValue})`;
-                } 
-                break;
-
-            case 'minResolution': {
-                const queryValue: TResolutionValue|undefined = typeof minResolution === "number" ? `${minResolution}dppx` : minResolution;
-                res=`(min-resolution: ${queryValue})`;
-                break;
-            }
-            case 'maxResolution': {
-                const queryValue: TResolutionValue|undefined = typeof maxResolution === "number" ? `${maxResolution}dppx` : maxResolution;
-                res=`(max-resolution: ${queryValue})`;
-                break;
-            }
-        }
-        return res;
+        return getQuery(key, props)
     })
-    },[]
-);
+   },[]
+  );
   const matches = useMediaQuery({ query: query });
   return matches ? <> {props.children} </> : null;
 }

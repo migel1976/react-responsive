@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { IMediaQuery } from "./types"
 
-const useMediaQuery = ( mediaQuery: IMediaQuery ) => {
+export const useMediaQuery = ( mediaQuery: IMediaQuery ) => {
     const { query } = mediaQuery;
     const [ isMatch, setIsMatch ] = useState(false);
     const onChange = (e: MediaQueryListEvent) => {
@@ -16,4 +16,3 @@ const useMediaQuery = ( mediaQuery: IMediaQuery ) => {
     },[query])
     return isMatch;
 }
-export default useMediaQuery;

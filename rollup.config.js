@@ -1,35 +1,31 @@
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import dts from "rollup-plugin-dts";
 import typescript from "@rollup/plugin-typescript";
-
-const packageJson = require("./package.json");
+import pkg from "./package.json" with { type: "json" };
 
 export default [
+  // browser-friendly UMD build
+  {
+    input: "src/main.ts",
+    output: {
+      name: "@migel1976/react-responsive",
+      file: pkg.browser,
+      format: "umd",
+      globals: {
+        react: "React",
+        "react/jsx-runtime": "jsxRuntime",
+      },
+    },
+    plugins: [typescript({ tsconfig: "./tsconfig.json" })],
+    external: ["react", "react/jsx-runtime"],
+  },
+
+  // CommonJS (for Node) and ES module (for bundlers) build.
   {
     input: "src/main.ts",
     output: [
-      {
-        file: packageJson.main,
-        format: "cjs",
-        sourcemap: true,
-      },
-      {
-        file: packageJson.module,
-        format: "esm",
-        sourcemap: true,
-      },
+      { file: pkg.main, format: "cjs" },
+      { file: pkg.module, format: "es" },
     ],
-    plugins: [
-      resolve(),
-      commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
-    ],
-    external: ["react"],
-  },
-  {
-    input: "src/main.ts",
-    output: [{ file: packageJson.types, format: "es" }],
-    plugins: [dts.default()],
+    plugins: [typescript({ tsconfig: "./tsconfig.json" })],
+    external: ["react", "react/jsx-runtime"],
   },
 ];

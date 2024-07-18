@@ -1,6 +1,6 @@
 import React from "react";
 import { TOrientationValue, TResolutionValue, TDimensionValue } from "./types";
-import useMediaQuery from "./useMediaQuery";
+import {useMediaQuery} from "./useMediaQuery";
 
 interface MediaQueryProps {
   orientation?: TOrientationValue;
